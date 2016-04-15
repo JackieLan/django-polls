@@ -31,7 +31,11 @@ Quick start
 6. Run `./runtests.py` to test the Django polls project
 
 7. Code coverage
+
    (Optional) Install coverage.py, `pip install coverage`
+
    Run `coverage run --source='.' runtests.py test polls` to gather data
+
    Run `coverage report` to report on the results
+
    Run `coverage html` to get a nicer presentation
