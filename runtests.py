@@ -31,7 +31,6 @@ TEMPLATE_CONTEXT_PROCESSORS = [
 
 ROOT_URLCONF = 'runtests'
 
-
 def runtests():
     from django import VERSION
     from django.conf import settings
