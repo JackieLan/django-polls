@@ -34,7 +34,7 @@ Quick start
 
    (Optional) Install coverage.py, `pip install coverage`
 
-   Run `coverage run --source='.' runtests.py test polls` to gather data
+   Run `coverage run --source='.' runtests.py` to gather data
 
    Run `coverage report` to report on the results
 

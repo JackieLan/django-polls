@@ -1,7 +1,7 @@
 from django.core.urlresolvers import reverse
 from django.test import TestCase, override_settings
 
-from polls.models import Question
+from polls.models import Question, Choice
 from django.utils import timezone
 import datetime
 
@@ -14,6 +14,9 @@ def create_question(question_text, days):
     time = timezone.now() + datetime.timedelta(days=days)
     return Question.objects.create(question_text=question_text,
                                    pub_date=time)
+
+def create_choice(choice_text, question):
+    return Choice.objects.create(choice_text=choice_text, question=question)
 
 @override_settings(ROOT_URLCONF='tests.view_tests.urls', USE_I18N=True, USE_L10N=False, LANGUAGE_CODE='en')
 class QuestionViewTests(TestCase):
@@ -98,3 +101,20 @@ class QuestionIndexDetailTests(TestCase):
                                    args=(past_question.id,)))
         self.assertContains(response, past_question.question_text,
                             status_code=200)
+
+@override_settings(ROOT_URLCONF='tests.view_tests.urls')
+class VoteViewTests(TestCase):
+    def test_success_vote(self):
+        question = create_question(question_text='question.',
+                                          days=0)
+        choice1 = create_choice(choice_text='choice1.', question=question)
+        choice2 = create_choice(choice_text='choice2.', question=question)
+        response = self.client.post(reverse('polls:vote', args=(question.id,)), {'choice': str(choice1.id), })
+        self.assertEquals(response.status_code, 302)
+    def test_failure_vote(self):
+        question = create_question(question_text='question.',
+                                          days=0)
+        choice1 = create_choice(choice_text='choice1.', question=question)
+        response = self.client.post(reverse('polls:vote', args=(question.id,)), {'choice': str(choice1.id+10), })
+        self.assertEquals(response.status_code, 200)
+        self.assertContains(response, 'You didn&#39;t select a choice.', status_code=200)

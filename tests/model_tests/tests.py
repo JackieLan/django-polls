@@ -3,7 +3,7 @@ import datetime
 from django.utils import timezone
 from django.test import TestCase
 
-from polls.models import Question
+from polls.models import Question, Choice
 
 class QuestionMethodTests(TestCase):
     def test_was_published_recently_with_future_question(self):
@@ -30,3 +30,12 @@ class QuestionMethodTests(TestCase):
         time = timezone.now() - datetime.timedelta(hours=1)
         recent_question = Question(pub_date=time)
         self.assertEqual(recent_question.was_published_recently(), True)
+
+class ChoiceMethodTests(TestCase):
+    def test_choice_str(self):
+        time = timezone.now()
+        question = Question(pub_date=time)
+        choice = Choice()
+        choice.question = question
+        choice.choice_text = 'Choice1'
+        self.assertEqual(str(choice), 'Choice1')
